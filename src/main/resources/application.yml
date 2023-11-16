@@ -1,0 +1,16 @@
+server:
+  port=8080
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://39.98.41.126:33306/homework?useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: Qgstudio_123
+mybatis-plus:
+    global-config:
+        db-config:
+            id-type: auto
+    configuration:
+        map-underscore-to-camel-case: false

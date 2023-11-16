@@ -1,5 +1,6 @@
 package com.allen.homeworkrelease;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.alink.dm.api.DeviceInfo;
 
 import com.aliyun.alink.dm.api.IMqttClient;
@@ -18,13 +19,21 @@ import com.aliyun.alink.linksdk.cmp.core.listener.IConnectSendListener;
 import com.aliyun.alink.linksdk.cmp.core.listener.IConnectSubscribeListener;
 import com.aliyun.alink.linksdk.tools.AError;
 import com.aliyun.alink.linksdk.tools.ALog;
+import com.allen.homeworkrelease.pojo.Homework;
+import com.allen.homeworkrelease.pojo.Payload;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 public class JavaLink {
-    public static String productKey = "k0f5yeav9xl";
-    public static String deviceName = "client";
-    public static String deviceSecret = "8353d48c970d757799424e4832abd7c1";
+    //public static String productKey = "k0f62rWdZFV";
+    //public static String deviceName = "client";
+    //public static String deviceSecret = "8353d48c970d757799424e4832abd7c1";
+    public static String productKey = "k0f62rWdZFV";
+    public static String deviceName = "server";
+    public static String deviceSecret = "3dac22ba3e4e4f3860c670ca7025ed67";
 
     /**
      * 初始化连接
@@ -38,7 +47,7 @@ public class JavaLink {
          * step 1: 设置MQTT初始化参数
          */
         IoTMqttClientConfig config = new IoTMqttClientConfig();
-        MqttConfigure.mqttHost = "iot-060a88dy.mqtt.iothub.aliyuncs.com:443";
+        MqttConfigure.mqttHost = "iot-06z00ijdy6aqd8v.mqtt.iothub.aliyuncs.com:443";
 
         /*
          *是否接受离线消息
@@ -99,7 +108,7 @@ public class JavaLink {
         // 订阅
         MqttSubscribeRequest subscribeRequest = new MqttSubscribeRequest();
         // subTopic 替换成您需要订阅的 topic
-        subscribeRequest.topic = "/k0f5yeav9xl/client/user/test";
+        subscribeRequest.topic = "/k0fgaCdVEPt/server/user/test";
         subscribeRequest.isSubscribe = true;
         LinkKit.getInstance().subscribe(subscribeRequest, new IConnectSubscribeListener() {
             @Override
@@ -114,20 +123,20 @@ public class JavaLink {
 
     }
 
-    public static void release(){
+    public static void release(Object o){
+        System.out.println("release");
         // 发布
         MqttPublishRequest request = new MqttPublishRequest();
         // 设置是否需要应答。
         request.isRPC = false;
         // 设置topic，设备通过该Topic向物联网平台发送消息。
-        request.topic = "/k0f5yeav9xl/client/user/test";
+        request.topic = "/k0f62rWdZFV/sever/user/homework";
         // 设置qos
         request.qos = 0;
-        String data = "{\n" +
-                "\"TargetDevice\":\"client\",\n" +
-                "\"test\":\"233\"\n" +
-                "}"; //TODO:data 设置需要发布的数据
-        request.payloadObj = data;
+        Payload payload = new Payload("M750", (List<Homework>) o);
+        String jsonString = JSON.toJSONString(payload);
+        System.out.println(jsonString);
+        request.payloadObj = jsonString;
         IMqttClient mqttClient = LinkKit.getInstance().getMqttClient();
         mqttClient.publish(request, new IConnectSendListener() {
             @Override
@@ -135,11 +144,13 @@ public class JavaLink {
                 // 消息成功提交给操作系统的发送缓冲区。
                 // 在网络波动等异常情况下，消息可能无法到达云端。
                 // 如果上行的消息有对应的下行的reply, 建议通过reply报文来确认上行消息的到达。
+                System.out.println("response");
                 System.out.println(aResponse.getData());
             }
             @Override
             public void onFailure(ARequest aRequest, AError aError) {
                 // 发布失败
+                System.out.println("error");
                 System.out.println(aError.toString());
             }
         });
