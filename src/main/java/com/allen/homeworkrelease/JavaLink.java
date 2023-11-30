@@ -47,7 +47,7 @@ public class JavaLink {
          * step 1: 设置MQTT初始化参数
          */
         IoTMqttClientConfig config = new IoTMqttClientConfig();
-        MqttConfigure.mqttHost = "iot-06z00ijdy6aqd8v.mqtt.iothub.aliyuncs.com:443";
+        MqttConfigure.mqttHost = "iot-060a88dy.mqtt.iothub.aliyuncs.com:443";
 
         /*
          *是否接受离线消息
@@ -108,7 +108,7 @@ public class JavaLink {
         // 订阅
         MqttSubscribeRequest subscribeRequest = new MqttSubscribeRequest();
         // subTopic 替换成您需要订阅的 topic
-        subscribeRequest.topic = "/k0fgaCdVEPt/server/user/test";
+        subscribeRequest.topic = "/k0f62rWdZFV/sever/user/homework";
         subscribeRequest.isSubscribe = true;
         LinkKit.getInstance().subscribe(subscribeRequest, new IConnectSubscribeListener() {
             @Override

@@ -5,9 +5,9 @@ spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://39.98.41.126:33306/homework?useSSL=false&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://39.98.41.126:33316/homework?useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: Qgstudio_123
+        password: ${HOMEWORK_MYSQL_PASSWORD}
 mybatis-plus:
     global-config:
         db-config:
